@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>官方页色值生成工具</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Noto+Sans+SC:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f5f5f5;
+      --surface: #ffffff;
+      --border: #e0e0e0;
+      --text: #000000;
+      --text-muted: #666666;
+      --accent: #07C160;
+      --accent-hover: #06ad56;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      line-height: 1.6;
+      padding: 2rem;
+    }
+
+    .page-brand {
+      font-size: 0.85rem;
+      color: #B2B2B2;
+      margin-bottom: 2rem;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      font-size: 2.0rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      letter-spacing: 0.02em;
+    }
+
+    .subtitle {
+      font-size: 0.9rem;
+      color: #B2B2B2;
+      margin-bottom: 2rem;
+      letter-spacing: 0.02em;
+    }
+
+    .input-section {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .input-group {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.25rem;
+    }
+
+    .input-group label {
+      display: block;
+      font-size: 0.9rem;
+      font-weight: 500;
+      margin-bottom: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .input-row {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .input-row input[type="color"] {
+      width: 48px;
+      height: 48px;
+      border: 2px solid var(--border);
+      border-radius: 4px;
+      cursor: pointer;
+      background: none;
+    }
+
+    .input-row input[type="text"] {
+      flex: 1;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      padding: 0.6rem 1rem;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      outline: none;
+    }
+
+    .input-row input[type="text"]:focus {
+      border-color: var(--accent);
+    }
+
+    .output-section {
+      margin-top: 2rem;
+    }
+
+    .module {
+      margin-bottom: 1.5rem;
+    }
+
+    .module-title {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .color-row {
+      display: grid;
+      grid-template-columns: 180px 1fr auto;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.6rem 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.9rem;
+    }
+
+    .color-row:last-child {
+      border-bottom: none;
+    }
+
+    .color-label {
+      color: var(--text-muted);
+    }
+
+    .color-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      color: var(--text);
+      word-break: break-all;
+    }
+
+    .color-preview {
+      width: 24px;
+      height: 24px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+
+    .copy-btn {
+      padding: 0.4rem 0.8rem;
+      font-size: 0.8rem;
+      font-family: inherit;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .copy-btn:hover {
+      background: var(--accent-hover);
+    }
+
+    .copy-btn.copied {
+      background: #22c55e;
+    }
+
+    .color-row-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    @media (max-width: 640px) {
+      .input-section {
+        grid-template-columns: 1fr;
+      }
+      .color-row {
+        grid-template-columns: 1fr auto;
+      }
+      .color-label {
+        grid-column: 1 / -1;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page-brand">Yitaohou｜Wechat Ads Design</div>
+  <div class="container">
+    <h1>官方页色值自动生成工具</h1>
+    <p class="subtitle">建议按照以下色值进行页面设置，最终效果以审核为准</p>
+
+    <div class="input-section">
+      <div class="input-group">
+        <label>全局背景</label>
+        <div class="input-row">
+          <input type="color" id="bgColor" value="#490300">
+          <input type="text" id="bgHex" value="#490300" placeholder="#490300">
+        </div>
+      </div>
+      <div class="input-group">
+        <label>主题色</label>
+        <div class="input-row">
+          <input type="color" id="themeColor" value="#8F0401">
+          <input type="text" id="themeHex" value="#8F0401" placeholder="#8F0401">
+        </div>
+      </div>
+    </div>
+
+    <div class="output-section" id="output"></div>
+  </div>
+
+  <script>
+    // ========== 工具函数 ==========
+
+    // 解析 Hex 为 RGB (0-255)
+    function hexToRgb(hex) {
+      hex = hex.replace(/^#/, '');
+      if (hex.length === 3) hex = hex[0]+hex[0]+hex[1]+hex[1]+hex[2]+hex[2];
+      const r = parseInt(hex.slice(0,2), 16);
+      const g = parseInt(hex.slice(2,4), 16);
+      const b = parseInt(hex.slice(4,6), 16);
+      return { r, g, b };
+    }
+
+    // RGB 转 Hex
+    function rgbToHex(r, g, b) {
+      return [r,g,b].map(x => Math.round(Math.min(255, Math.max(0,x))).toString(16).padStart(2,'0')).join('').toUpperCase();
+    }
+
+    // W3C 相对亮度 (0-1)，用于判断深色/浅色
+    function getRelativeLuminance(r, g, b) {
+      const toLinear = (c) => {
+        c = c / 255;
+        return c <= 0.04045 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+      };
+      return 0.2126 * toLinear(r) + 0.7152 * toLinear(g) + 0.0722 * toLinear(b);
+    }
+
+    // 判断是否为深色 (L < 0.5)
+    function isDark(r, g, b) {
+      return getRelativeLuminance(r, g, b) < 0.5;
+    }
+
+    // 混合颜色：color1 * (1 - ratio) + color2 * ratio
+    function blend(c1, c2, ratio) {
+      return {
+        r: c1.r * (1 - ratio) + c2.r * ratio,
+        g: c1.g * (1 - ratio) + c2.g * ratio,
+        b: c1.b * (1 - ratio) + c2.b * ratio
+      };
+    }
+
+    // 生成输出字符串 Hex,R,G,B,A
+    function toOutputString(r, g, b, a = 100) {
+      const hex = rgbToHex(r, g, b);
+      const R = Math.round(Math.min(255, Math.max(0, r)));
+      const G = Math.round(Math.min(255, Math.max(0, g)));
+      const B = Math.round(Math.min(255, Math.max(0, b)));
+      const A = Math.round(Math.min(100, Math.max(0, a)));
+      return `${hex},${R},${G},${B},${A}`;
+    }
+
+    // ========== 颜色计算逻辑 ==========
+
+    function computeColors(bgHex, themeHex) {
+      const bg = hexToRgb(bgHex);
+      const theme = hexToRgb(themeHex);
+      const white = { r: 255, g: 255, b: 255 };
+      const black = { r: 0, g: 0, b: 0 };
+
+      const bgDark = isDark(bg.r, bg.g, bg.b);
+      const themeDark = isDark(theme.r, theme.g, theme.b);
+
+      const result = {};
+
+      // 【页面样式】
+      result['主题色'] = { ...theme, a: 100 };
+      result['全局背景'] = { ...bg, a: 100 };
+
+      // 【精选视频】
+      result['卡片颜色 - 背景'] = { ...white, a: 100 };
+      if (bgDark) {
+        result['评论颜色 - 文字'] = { ...white, a: 100 };
+        const commentBg = blend(bg, white, 0.1);
+        result['评论颜色 - 背景'] = { r: commentBg.r, g: commentBg.g, b: commentBg.b, a: 100 };
+        result['分段按钮 - 文字'] = { ...white, a: 80 };
+        result['分段按钮 - 背景'] = { ...white, a: 0 };
+      } else {
+        result['评论颜色 - 文字'] = { ...black, a: 100 };
+        result['评论颜色 - 背景'] = { ...white, a: 100 };
+        result['分段按钮 - 文字'] = { ...black, a: 50 };
+        result['分段按钮 - 背景'] = { ...black, a: 0 };
+      }
+
+      // 【好礼合辑】
+      if (bgDark) {
+        result['选中合辑 - 文字'] = { ...bg, a: 100 };
+        result['选中合辑 - 背景'] = { ...white, a: 100 };
+        result['普通合辑 - 文字'] = { ...white, a: 100 };
+        result['普通合辑 - 背景'] = { ...white, a: 10 };  // 10% opacity white
+      } else {
+        result['选中合辑 - 文字'] = { ...black, a: 100 };
+        result['选中合辑 - 背景'] = { ...white, a: 100 };
+        result['普通合辑 - 文字'] = { ...black, a: 50 };
+        result['普通合辑 - 背景'] = { ...black, a: 3 };   // 3% opacity black
+      }
+      result['礼物卡片 - 背景'] = { ...white, a: 100 };
+
+      // 【转化按钮】
+      result['文字颜色 - 标题'] = { ...black, a: 100 };
+      result['文字颜色 - 描述'] = { r: 127, g: 127, b: 127, a: 100 };
+      result['按钮文字 - 文字'] = themeDark ? { ...white, a: 100 } : { ...black, a: 100 };
+      result['按钮文字 - 背景'] = { ...theme, a: 100 };
+      result['卡片颜色 - 边框'] = { ...white, a: 100 };
+      result['卡片颜色 - 背景'] = { ...white, a: 100 };
+
+      return result;
+    }
+
+    // ========== 渲染 ==========
+
+    function getPreviewStyle(c) {
+      const a = (c.a ?? 100) / 100;
+      const r = Math.round(c.r), g = Math.round(c.g), b = Math.round(c.b);
+      const checker = 'linear-gradient(45deg,#555 25%,transparent 25%),linear-gradient(-45deg,#555 25%,transparent 25%),linear-gradient(45deg,transparent 75%,#555 75%),linear-gradient(-45deg,transparent 75%,#555 75%)';
+      if (a === 0) return `background:${checker};background-size:8px 8px;background-position:0 0,0 4px,4px -4px,-4px 0`;
+      if (a < 1) return `background:linear-gradient(rgba(${r},${g},${b},${a}),rgba(${r},${g},${b},${a})),${checker};background-size:auto,8px 8px,8px 8px,8px 8px,8px 8px;background-position:0 0,0 0,0 4px,4px -4px,-4px 0`;
+      return `background:rgb(${r},${g},${b});`;
+    }
+
+    function renderOutput(colors) {
+      const modules = [
+        { title: '页面样式', keys: ['主题色', '全局背景'] },
+        { title: '精选视频', keys: ['卡片颜色 - 背景', '评论颜色 - 文字', '评论颜色 - 背景', '分段按钮 - 文字', '分段按钮 - 背景'] },
+        { title: '好礼合辑', keys: ['选中合辑 - 文字', '选中合辑 - 背景', '普通合辑 - 文字', '普通合辑 - 背景', '礼物卡片 - 背景'] },
+        { title: '转化按钮', keys: ['文字颜色 - 标题', '文字颜色 - 描述', '按钮文字 - 文字', '按钮文字 - 背景', '卡片颜色 - 边框', '卡片颜色 - 背景'] }
+      ];
+
+      let html = '';
+      for (const mod of modules) {
+        html += `<div class="module"><div class="module-title">${mod.title}</div>`;
+        for (const key of mod.keys) {
+          const c = colors[key];
+          const str = toOutputString(c.r, c.g, c.b, c.a ?? 100);
+          html += `
+            <div class="color-row">
+              <span class="color-label">${key}</span>
+              <div class="color-row-wrapper">
+                <div class="color-preview" style="${getPreviewStyle(c)}"></div>
+                <span class="color-value">${str}</span>
+              </div>
+              <button class="copy-btn" data-copy="${str.replace(/"/g, '&quot;')}">复制</button>
+            </div>`;
+        }
+        html += '</div>';
+      }
+      document.getElementById('output').innerHTML = html;
+
+      // 复制事件
+      document.querySelectorAll('.copy-btn').forEach(btn => {
+        btn.addEventListener('click', async () => {
+          const text = btn.getAttribute('data-copy').replace(/&quot;/g, '"');
+          try {
+            await navigator.clipboard.writeText(text);
+            btn.textContent = '已复制';
+            btn.classList.add('copied');
+            setTimeout(() => {
+              btn.textContent = '复制';
+              btn.classList.remove('copied');
+            }, 1500);
+          } catch (e) {
+            btn.textContent = '复制失败';
+          }
+        });
+      });
+    }
+
+    function normalizeHex(val) {
+      val = val.trim();
+      if (!val) return null;
+      if (!val.startsWith('#')) val = '#' + val;
+      return /^#[0-9A-Fa-f]{3,8}$/.test(val) ? val : null;
+    }
+
+    function update() {
+      const bgRaw = document.getElementById('bgHex').value.trim() || '#490300';
+      const themeRaw = document.getElementById('themeHex').value.trim() || '#8F0401';
+      const bgHex = normalizeHex(bgRaw) || '#490300';
+      const themeHex = normalizeHex(themeRaw) || '#8F0401';
+      document.getElementById('bgColor').value = bgHex;
+      document.getElementById('themeColor').value = themeHex;
+      const colors = computeColors(bgHex, themeHex);
+      renderOutput(colors);
+    }
+
+    // ========== 初始化与联动 ==========
+
+    document.getElementById('bgColor').addEventListener('input', (e) => {
+      document.getElementById('bgHex').value = e.target.value;
+      update();
+    });
+    document.getElementById('themeColor').addEventListener('input', (e) => {
+      document.getElementById('themeHex').value = e.target.value;
+      update();
+    });
+    document.getElementById('bgHex').addEventListener('input', update);
+    document.getElementById('themeHex').addEventListener('input', update);
+
+    update();
+  </script>
+</body>
+</html>
